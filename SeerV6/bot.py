@@ -10,7 +10,7 @@ def model_path(filename: str) -> str:
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         base = Path(sys._MEIPASS)
     else:
-        base = Path(__file__).resolve().parent.parent
+        base = Path(__file__).resolve().parent
     return str(base / filename)
 
 
@@ -636,7 +636,7 @@ class MyBot(Hivemind):
 
         self.condition = SeerGameConditionV6()
         self.act_parser = SeerActionV6()
-        self.agent = Agent("32400.p")
+        self.agent = Agent(model_path("32400.p"))
         self.tick_skip = 8
 
         self.game_state: V1GameState = None

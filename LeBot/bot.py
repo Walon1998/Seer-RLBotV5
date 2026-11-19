@@ -12,8 +12,26 @@ def model_path(filename: str) -> str:
     if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
         base = Path(sys._MEIPASS)
     else:
-        base = Path(__file__).resolve().parent.parent
+        base = Path(__file__).resolve().parent
     return str(base / filename)
+
+
+def mesh_path() -> str:
+    """Resolve the collision mesh directory from a PyInstaller bundle or from source."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        base = Path(sys._MEIPASS)
+    else:
+        base = Path(__file__).resolve().parent
+    return str(base / "collision_meshes")
+
+
+COLLISION_MESHES = mesh_path()
+os.environ["RS_COLLISION_MESHES"] = COLLISION_MESHES
+try:
+    rsim.init(COLLISION_MESHES)
+except RuntimeError as error:
+    if str(error) != "Already inited":
+        raise
 
 
 try:
@@ -2281,15 +2299,15 @@ class MyBot(Hivemind):
 
         self.obs_builderV7 = [SeerObsV7(self.condition), SeerObsV7(self.condition)]
         self.act_parserV7 = SeerActionV7()
-        self.agentV7 = AgentV7("43200.p")
+        self.agentV7 = AgentV7(model_path("43200.p"))
 
         self.obs_builderV8 = [SeerObsV8(self.condition), SeerObsV8(self.condition), SeerObsV8(self.condition), ]
         self.act_parserV8 = SeerActionV8()
-        self.agentV8 = AgentV8("11100.p")
+        self.agentV8 = AgentV8(model_path("11100.p"))
 
         self.obs_builderV4 = [SeerObsV4(1, self.condition), SeerObsV4(1, self.condition)]
         self.act_parserV4 = SeerActionV4()
-        self.agentV4 = AgentV4("36000.p")
+        self.agentV4 = AgentV4(model_path("36000.p"))
 
         self.tick_skip = 8
 
