@@ -677,10 +677,15 @@ class MyBot(Hivemind):
             for i, index in enumerate(self.indices):
 
                 player = self.game_state.players[index]
-
-                self.condition.overtime = packet.match_info.is_overtime
-                self.condition.timer = max(packet.match_info.game_time_remaining, 0)
-                self.condition.score = packet.teams[0].score - packet.teams[1].score
+                
+                if packet.match_info.is_unlimited_time:
+                    self.condition.overtime = False
+                    self.condition.timer = 250
+                    self.condition.score = 0
+                else:
+                    self.condition.overtime = packet.match_info.is_overtime
+                    self.condition.timer = max(packet.match_info.game_time_remaining, 0)
+                    self.condition.score = packet.teams[0].score - packet.teams[1].score
 
                 self.obs_builder[i].pre_step(self.game_state)
                 obs = self.obs_builder[i].build_obs(
