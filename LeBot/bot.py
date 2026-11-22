@@ -16,6 +16,24 @@ def model_path(filename: str) -> str:
     return str(base / filename)
 
 
+def mesh_path() -> str:
+    """Resolve the collision mesh directory from a PyInstaller bundle or from source."""
+    if getattr(sys, "frozen", False) and hasattr(sys, "_MEIPASS"):
+        base = Path(sys._MEIPASS)
+    else:
+        base = Path(__file__).resolve().parent
+    return str(base / "collision_meshes")
+
+
+COLLISION_MESHES = mesh_path()
+os.environ["RS_COLLISION_MESHES"] = COLLISION_MESHES
+try:
+    rsim.init(COLLISION_MESHES)
+except RuntimeError as error:
+    if str(error) != "Already inited":
+        raise
+
+
 try:
     import torch
 except ImportError:
