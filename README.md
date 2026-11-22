@@ -6,3 +6,4 @@
 | **SeerV6 32400**     | ✅           | ✅            | ✅           | ❌                 |
 
 Seer/LeBot is aware of the game score and game time. Always make sure to run a normal 5 minute game!
+Seer/LeBot was only trained on the octane hitbox and will perform worse against other hitboxes!
